@@ -10,10 +10,12 @@
     "lint": "eslint . --ext .js",
     "format": "prettier --write \"**/*.js\"",
     "seed": "node seed/seed.js",
+    "seed:clear": "node seed/clearDatabase.js",
+    "seed:verify": "node seed/verifySeed.js",
     "test": "jest --runInBand --detectOpenHandles"
   },
   "dependencies": {
-    "@google/genai": "^0.1.1",
+    "@google/genai": "^0.2.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -26,6 +28,7 @@
     "zod": "^3.23.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "eslint": "^9.1.1",
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",

@@ -1,11 +1,26 @@
 import express from 'express';
-import { sendResponse } from '../utils/responseHandler.js';
+import { 
+  getOverview,
+  getHotspots,
+  getClusters,
+  getMarkers,
+  getDistrictDetails,
+  getLocationDetails,
+  searchLocations
+} from '../controllers/mapController.js';
+import { authenticate } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Placeholder for hotspot coordinates retrieval
-router.get('/hotspots', (req, res) => {
-  return sendResponse(res, 501, 'Crime mapping hotspots endpoint: Under Construction');
-});
+// Enforce JWT Auth across all maps spatial endpoints
+router.use(authenticate);
+
+router.get('/overview', getOverview);
+router.get('/hotspots', getHotspots);
+router.get('/clusters', getClusters);
+router.get('/markers', getMarkers);
+router.get('/district/:name', getDistrictDetails);
+router.get('/location/:id', getLocationDetails);
+router.get('/search', searchLocations);
 
 export default router;
