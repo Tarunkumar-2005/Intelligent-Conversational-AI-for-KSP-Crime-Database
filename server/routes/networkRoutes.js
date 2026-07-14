@@ -1,11 +1,26 @@
 import express from 'express';
-import { sendResponse } from '../utils/responseHandler.js';
+import { 
+  getCriminalNeighborhood,
+  getFIRNeighborhood,
+  getVehicleNeighborhood,
+  getPhoneNeighborhood,
+  getBankNeighborhood,
+  getLocationNeighborhood,
+  searchEntities
+} from '../controllers/networkController.js';
+import { authenticate } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Placeholder for Cytoscape elements request
-router.get('/graph/:firId', (req, res) => {
-  return sendResponse(res, 501, 'Criminal network linkages graph endpoint: Under Construction');
-});
+// Enforce authentication across all network graph endpoints
+router.use(authenticate);
+
+router.get('/criminal/:id', getCriminalNeighborhood);
+router.get('/fir/:id', getFIRNeighborhood);
+router.get('/vehicle/:id', getVehicleNeighborhood);
+router.get('/phone/:id', getPhoneNeighborhood);
+router.get('/bank/:id', getBankNeighborhood);
+router.get('/location/:id', getLocationNeighborhood);
+router.get('/search', searchEntities);
 
 export default router;

@@ -1,93 +1,46 @@
 import React from 'react';
-import { NavLink, Outlet, Link } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  MessageSquare, 
-  Network, 
-  Map, 
-  UserSquare2, 
-  TrendingUp, 
-  LogOut 
-} from 'lucide-react';
+import { Outlet } from 'react-router-dom';
+import Navbar from '../components/Navbar.jsx';
+import Sidebar from '../components/Sidebar.jsx';
+import ToastList from '../components/ToastList.jsx';
+import { useUI } from '../context/UIContext.jsx';
 
 const MainLayout = () => {
-  const menuItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
-    { name: 'AI Chatbot', path: '/chat', icon: <MessageSquare size={20} /> },
-    { name: 'Network Graph', path: '/network', icon: <Network size={20} /> },
-    { name: 'Hotspot Map', path: '/map', icon: <Map size={20} /> },
-    { name: 'Offender Profile', path: '/profile', icon: <UserSquare2 size={20} /> },
-    { name: 'Predictions', path: '/prediction', icon: <TrendingUp size={20} /> },
-  ];
+  const { theme } = useUI();
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-police-dark">
-      {/* Sidebar Navigation */}
-      <aside className="w-64 bg-police-navy border-r border-police-accent/30 flex flex-col justify-between">
-        <div>
-          {/* Brand Header */}
-          <div className="h-16 flex items-center px-6 border-b border-police-accent/30">
-            <Link to="/" className="flex flex-col">
-              <span className="font-display font-bold text-police-cyan leading-none">KSP ANALYTICS</span>
-              <span className="text-[10px] text-police-teal tracking-widest uppercase mt-1">Investigation Portal</span>
-            </Link>
+    <div className={`flex h-screen w-screen overflow-hidden transition-colors duration-200 ${
+      theme === 'dark' ? 'bg-[#030712] text-gray-200' : 'bg-[#f8fafc] text-slate-800'
+    }`}>
+      {/* Sidebar navigation panel */}
+      <Sidebar />
+
+      {/* Main Content shell */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        {/* Top Navbar */}
+        <Navbar />
+
+        {/* Dynamic Route outlet */}
+        <main className="flex-1 overflow-y-auto relative flex flex-col justify-between">
+          <div className="flex-1 pb-10">
+            <Outlet />
           </div>
 
-          {/* Navigation Links */}
-          <nav className="p-4 space-y-1">
-            {menuItems.map((item) => (
-              <NavLink
-                key={item.name}
-                to={item.path}
-                className={({ isActive }) => 
-                  `flex items-center gap-3 px-4 py-3 rounded text-sm font-medium transition-all ${
-                    isActive 
-                      ? 'bg-police-cyan/10 text-police-cyan border-l-2 border-police-cyan' 
-                      : 'text-gray-400 hover:bg-police-blue/50 hover:text-white'
-                  }`
-                }
-              >
-                {item.icon}
-                <span>{item.name}</span>
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-
-        {/* Footer / User Profile section */}
-        <div className="p-4 border-t border-police-accent/30">
-          <div className="flex items-center justify-between mb-4">
+          {/* Secure Portal Footer */}
+          <footer className="py-4 px-6 border-t border-slate-200 dark:border-slate-800/80 bg-white/50 dark:bg-[#0b1329]/20 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
             <div>
-              <p className="text-xs text-gray-500">Logged in as:</p>
-              <p className="text-sm font-semibold text-gray-300">Inspector Shekhar</p>
-              <span className="text-[10px] bg-police-cyan/10 text-police-cyan px-2 py-0.5 rounded">Investigator</span>
+              © 2026 Karnataka State Police Department. All Rights Reserved.
             </div>
-            <button className="text-gray-500 hover:text-red-400 p-2 rounded hover:bg-red-500/10 transition-colors">
-              <LogOut size={18} />
-            </button>
-          </div>
-        </div>
-      </aside>
+            <div className="flex items-center gap-1.5 text-blue-500 dark:text-cyan-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-500 dark:bg-cyan-400 animate-pulse"></span>
+              Secure SSL Encrypted Tunnel
+            </div>
+          </footer>
+        </main>
+      </div>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col overflow-y-auto">
-        {/* Top Header */}
-        <header className="h-16 border-b border-police-accent/30 flex items-center justify-between px-8 bg-police-navy/40 backdrop-blur-md">
-          <div className="flex items-center gap-4">
-            <span className="h-2 w-2 rounded-full bg-police-cyan animate-pulse"></span>
-            <span className="text-xs text-gray-400 font-semibold tracking-wider uppercase">System Live Mode</span>
-          </div>
-          
-          <div className="text-xs text-gray-400 font-mono">
-            Location: Mysuru City Division
-          </div>
-        </header>
-
-        {/* Dynamic Route Container */}
-        <div className="flex-1 bg-police-dark/50">
-          <Outlet />
-        </div>
-      </main>
+      {/* Floating real-time notifications */}
+      <ToastList />
     </div>
   );
 };

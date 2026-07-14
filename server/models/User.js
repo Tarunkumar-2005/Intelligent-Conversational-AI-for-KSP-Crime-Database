@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       match: [
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/,
         'Please provide a valid email address.',
       ],
       index: true,
@@ -48,12 +48,12 @@ const userSchema = new mongoose.Schema(
     policeStation: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'PoliceStation',
-      required: {
-        values: function() {
+      required: [
+        function() {
           return [ROLES.INVESTIGATOR, ROLES.SUPERVISOR].includes(this.role);
         },
-        message: 'Police Station is required for Investigators and Supervisors.',
-      },
+        'Police Station is required for Investigators and Supervisors.',
+      ],
     },
     phoneNumber: {
       type: String,
