@@ -1,16 +1,14 @@
 import express from 'express';
-import { sendResponse } from '../utils/responseHandler.js';
+import { login, logout, getMe } from '../controllers/authController.js';
+import { authenticate } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Placeholder for Login
-router.post('/login', (req, res) => {
-  return sendResponse(res, 501, 'Authentication login endpoint: Under Construction');
-});
+// Public route: User Login
+router.post('/login', login);
 
-// Placeholder for User Registration
-router.post('/register', (req, res) => {
-  return sendResponse(res, 501, 'Authentication registration endpoint: Under Construction');
-});
+// Protected routes: Requires valid JWT session token
+router.post('/logout', authenticate, logout);
+router.get('/me', authenticate, getMe);
 
 export default router;

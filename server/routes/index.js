@@ -6,6 +6,8 @@ import analyticsRoutes from './analyticsRoutes.js';
 import networkRoutes from './networkRoutes.js';
 import mapsRoutes from './mapsRoutes.js';
 import predictionRoutes from './predictionRoutes.js';
+import reportRoutes from './reportRoutes.js';
+import profileRoutes from './profileRoutes.js';
 import { sendResponse } from '../utils/responseHandler.js';
 
 const router = express.Router();
@@ -27,5 +29,7 @@ router.use('/analytics', analyticsRoutes);
 router.use('/network', networkRoutes);
 router.use('/maps', mapsRoutes);
 router.use('/prediction', predictionRoutes);
+router.use('/reports', reportRoutes);
+router.use('/profile', profileRoutes);
 
 export default router;
