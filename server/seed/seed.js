@@ -1,8 +1,16 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+
+// Configure Node.js to use reliable public DNS servers for Atlas SRV record resolution
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+} catch (dnsErr) {
+  // fallback if system restricts custom DNS
+}
 
 // Load models
 import User from '../models/User.js';
@@ -50,9 +58,9 @@ dotenv.config({ path: dirname(__dirname) + '/.env' });
 const seed = async () => {
   logger.info('🚀 Initiating database seeding sequence...');
   
-  const mongoUri = process.env.MONGODB_URI;
+  const mongoUri = process.env.ATLAS_DB_URL || process.env.MONGODB_URI;
   if (!mongoUri) {
-    logger.error('MONGODB_URI is not defined in environment variables.');
+    logger.error('MONGODB_URI or ATLAS_DB_URL environment variable is missing.');
     process.exit(1);
   }
 

@@ -1,7 +1,12 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+} catch (dnsErr) {}
 
 // Load models
 import User from '../models/User.js';
@@ -62,9 +67,9 @@ export const clearDatabase = async () => {
 const run = async () => {
   // Only connect and run directly if this file is executed directly (not imported)
   if (process.argv[1] && process.argv[1].endsWith('clearDatabase.js')) {
-    const mongoUri = process.env.MONGODB_URI;
+    const mongoUri = process.env.ATLAS_DB_URL || process.env.MONGODB_URI;
     if (!mongoUri) {
-      logger.error('MONGODB_URI is not defined in environment variables.');
+      logger.error('MONGODB_URI or ATLAS_DB_URL is missing.');
       process.exit(1);
     }
     

@@ -32,9 +32,55 @@ const hashedDefaultPassword = bcrypt.hashSync('Password@123', 12);
  */
 export const generateUsers = (count, stationDocs) => {
   const users = [];
-  const roles = ['Investigator', 'Analyst', 'Supervisor', 'Policymaker'];
   
-  for (let i = 0; i < count; i++) {
+  // Specific predefined users required by application roles
+  const requiredUsers = [
+    {
+      name: 'Anshula Dubashi',
+      email: 'anshula.dubashi@ksp.gov.in',
+      role: 'Supervisor',
+      badgeNumber: 'KSP-2015-001',
+    },
+    {
+      name: 'Devesh Dutta',
+      email: 'devesh.dutta@ksp.gov.in',
+      role: 'Investigator',
+      badgeNumber: 'KSP-2018-002',
+    },
+    {
+      name: 'Satish Asan',
+      email: 'satish.asan@ksp.gov.in',
+      role: 'Analyst',
+      badgeNumber: 'KSP-2020-003',
+    },
+    {
+      name: 'Shreya Chattopadhyay',
+      email: 'shreya.chattopadhyay@ksp.gov.in',
+      role: 'Policymaker',
+      badgeNumber: 'KSP-2022-004',
+    },
+  ];
+
+  requiredUsers.forEach((u) => {
+    let policeStation = undefined;
+    if (['Investigator', 'Supervisor'].includes(u.role) && stationDocs.length > 0) {
+      policeStation = getRandomElement(stationDocs)._id;
+    }
+    users.push({
+      _id: new mongoose.Types.ObjectId(),
+      name: u.name,
+      email: u.email,
+      password: hashedDefaultPassword, // Password@123
+      role: u.role,
+      badgeNumber: u.badgeNumber,
+      policeStation,
+      phoneNumber: generateIndianPhoneNumber(),
+      isActive: true,
+      lastLogin: faker.date.between({ from: '2026-01-01', to: '2026-06-30' }),
+    });
+  });
+
+  for (let i = users.length; i < count; i++) {
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
     const name = `${firstName} ${lastName}`;
@@ -43,13 +89,10 @@ export const generateUsers = (count, stationDocs) => {
     const badgeNumber = `KSP-${badgeYear}-${badgeNum}`;
     const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@ksp.gov.in`.replace(/[^a-z0-9.@]/g, '');
 
-    // Role distribution: 1 policymaker, 2 supervisors, 2 analysts, remainder investigators
     let role = 'Investigator';
-    if (i === 0) role = 'Policymaker';
-    else if (i <= 2) role = 'Supervisor';
-    else if (i <= 4) role = 'Analyst';
+    if (i <= 5) role = 'Analyst';
+    else if (i <= 7) role = 'Supervisor';
 
-    // Assign police station only to Investigators and Supervisors
     let policeStation = undefined;
     if (['Investigator', 'Supervisor'].includes(role) && stationDocs.length > 0) {
       policeStation = getRandomElement(stationDocs)._id;
